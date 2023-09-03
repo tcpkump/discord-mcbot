@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import logging
 import discord
 import os
 
@@ -9,26 +8,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DISCORD_TOKEN = str(os.environ.get("DISCORD_TOKEN"))
-DISCORD_GUILD_ID = str(os.environ.get("DISCORD_GUILD_ID"))
+#DISCORD_GUILD_ID = str(os.environ.get("DISCORD_GUILD_ID"))
 
-# This example requires the 'message_content' intent.
+bot = discord.Bot()
 
-intents = discord.Intents.default()
-intents.message_content = True
+# create Slash Command group with bot.create_group
+greetings = bot.create_group("greetings", "Greet people")
 
-client = discord.Client(intents=intents)
-tree = discord.app_commands.CommandTree(client)
+@greetings.command()
+async def hello(ctx):
+  await ctx.respond(f"Hello, {ctx.author}!")
 
-@tree.command(name = "minecraft", description = "Manage Minecraft Server(s)", guild=discord.Object(id=DISCORD_GUILD_ID))
-async def first_command(interaction):
-    await interaction.response.send_message("Hello!")
+@greetings.command()
+async def bye(ctx):
+  await ctx.respond(f"Bye, {ctx.author}!")
 
-@client.event
-async def on_ready():
-    await tree.sync(guild=discord.Object(id=DISCORD_GUILD_ID))
-    print("Ready!")
-
-
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-client.run(DISCORD_TOKEN, log_handler=handler)
+bot.run(DISCORD_TOKEN)
 
