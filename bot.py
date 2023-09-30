@@ -34,13 +34,14 @@ async def list(ctx):
     response = requests.get(API_SERVER + "/list")
     json_data = json.loads(response.text)
     server_list = json_data["message"]
-    
+
     output = "Available servers:"
     for server in server_list:
         if server == DEFAULT_SERVER:
-            output += f"\n- {server} (default)"
+            output += f"\n- {server['name']} (default)"
         else:
-            output += f"\n- {server}"
+            output += f"\n- {server['name']}"
+        output += f"\n  version: {server['data']['version']}"
 
     print(output)
     await ctx.respond(output)

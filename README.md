@@ -57,7 +57,7 @@ The `days` argument is optional, if not provided, it will extend by 1 day.
 I am currently building my docker images manually using the following commands:
 
 ```bash
-docker build -t git.imkumpy.in/kumpy/discord-mcbot .
+docker build -t git.imkumpy.in/kumpy/discord-mcbot:latest .
 docker push git.imkumpy.in/kumpy/discord-mcbot:latest
 ```
 
