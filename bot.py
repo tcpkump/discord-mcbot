@@ -82,7 +82,7 @@ async def stop(ctx, server: discord.Option(str, server_desc, required=False, def
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
-    if server not in server_list:
+    if not any(i['name'] == server for i in server_list):
         print(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
@@ -109,7 +109,7 @@ async def extendtime(ctx,
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
-    if server not in server_list:
+    if not any(i['name'] == server for i in server_list):
         print(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
