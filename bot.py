@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import logging
 import requests
 import discord
 import json
@@ -13,12 +14,13 @@ DISCORD_TOKEN = str(os.environ.get("DISCORD_TOKEN"))
 API_SERVER = str(os.environ.get("API_SERVER"))
 DEFAULT_SERVER = str(os.environ.get("DEFAULT_SERVER"))
 
+logging.basicConfig(level=logging.INFO)
+
 # prepare bot
 bot = discord.Bot()
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
+    logging.info(f"Logged in as {bot.user} (ID: {bot.user.id})")
 
 # create commands/command group
 minecraft = discord.SlashCommandGroup("minecraft", "Manage Minecraft server(s).")
@@ -29,7 +31,7 @@ async def list(ctx):
     """
     Get the list of Minecraft servers available to manage.
     """
-    print(f"{ctx.author} issued command: list")
+    logging.info(f"{ctx.author} issued command: list")
 
     response = requests.get(API_SERVER + "/list")
     json_data = json.loads(response.text)
@@ -43,7 +45,7 @@ async def list(ctx):
             output += f"\n- {server['name']}"
         output += f"\n  version: {server['data']['version']}"
 
-    print(output)
+    logging.info(output)
     await ctx.respond(output)
 
 @minecraft.command()
@@ -51,15 +53,15 @@ async def start(ctx, server: discord.Option(str, server_desc, required=False, de
     """
     Start the Minecraft server
     """
-    print(f"{ctx.author} issued command: start")
-    print(f"(arg) server: {server}")
+    logging.info(f"{ctx.author} issued command: start")
+    logging.info(f"(arg) server: {server}")
 
     response = requests.get(API_SERVER + "/list")
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
     if not any(i['name'] == server for i in server_list):
-        print(f"Server ({server}) not in list of servers.")
+        logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
 
@@ -67,7 +69,7 @@ async def start(ctx, server: discord.Option(str, server_desc, required=False, de
     response = requests.post(API_SERVER + "/start", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
-    print(message)
+    logging.info(message)
     await ctx.respond(message)
 
 @minecraft.command()
@@ -75,15 +77,15 @@ async def stop(ctx, server: discord.Option(str, server_desc, required=False, def
     """
     Stop the Minecraft server
     """
-    print(f"{ctx.author} issued command: stop")
-    print(f"(arg) server: {server}")
+    logging.info(f"{ctx.author} issued command: stop")
+    logging.info(f"(arg) server: {server}")
 
     response = requests.get(API_SERVER + "/list")
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
     if not any(i['name'] == server for i in server_list):
-        print(f"Server ({server}) not in list of servers.")
+        logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
 
@@ -91,7 +93,7 @@ async def stop(ctx, server: discord.Option(str, server_desc, required=False, def
     response = requests.post(API_SERVER + "/stop", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
-    print(message)
+    logging.info(message)
     await ctx.respond(message)
 
 @minecraft.command()
@@ -101,21 +103,21 @@ async def extendtime(ctx,
     """
     Extend how long the Minecraft server stays running
     """
-    print(f"{ctx.author} issued command: extendtime")
-    print(f"(arg) server: {server}")
-    print(f"(arg) days: {days}")
+    logging.info(f"{ctx.author} issued command: extendtime")
+    logging.info(f"(arg) server: {server}")
+    logging.info(f"(arg) days: {days}")
 
     response = requests.get(API_SERVER + "/list")
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
     if not any(i['name'] == server for i in server_list):
-        print(f"Server ({server}) not in list of servers.")
+        logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
 
     if days < 1 or days > 30:
-        print(f"Days ({days}) outside of accepted range 1-30.")
+        logging.info(f"Days ({days}) outside of accepted range 1-30.")
         await ctx.respond(f"Days ({days}) outside of accepted range 1-30.")
         return
 
@@ -123,7 +125,7 @@ async def extendtime(ctx,
     response = requests.post(API_SERVER + "/extendtime", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
-    print(message)
+    logging.info(message)
     await ctx.respond(message)
 
 # main
