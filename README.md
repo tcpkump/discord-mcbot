@@ -42,7 +42,7 @@ Stops the specified server. If no server is passed, it will stop the default ser
 /minecraft extendtime [server] [days]
 ```
 
-This extends the [auto-stop]() feature in itzg/docker-minecraft-server containers. When using this feature, servers will automatically turn off after a configured period of time when no players are online.
+This extends the [auto-stop](https://docker-minecraft-server.readthedocs.io/en/latest/misc/autopause-autostop/autostop/) feature in itzg/docker-minecraft-server containers. When using this feature, servers will automatically turn off after a configured period of time when no players are online.
 
 This command will keep the server running for the given number of days. It accepts a value between 1 and 30. This is useful for projects that you would like to keep running even when players are offline.
 
