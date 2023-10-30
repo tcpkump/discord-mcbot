@@ -13,7 +13,7 @@ This is a very simple bot which only has a few commands:
 
 For a description of each command, see [Commands](#Commands).
 
-The bot interacts with a separate API service [mc-manager-api](https://github.com/garrettleber/mc-manager-api) that provides the exact same commands. For more info on the API, view that project's README. 
+The bot interacts with a separate API service [mc-manager-api](https://github.com/tcpkump/mc-manager-api) that provides the exact same commands. For more info on the API, view that project's README. 
 Requests to the API are then executed on the actual instance that is hosting the Minecraft servers.
 
 I run it in a docker container, built from the supplied `Dockerfile`.
