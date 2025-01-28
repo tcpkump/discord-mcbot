@@ -1,6 +1,8 @@
 venv/
+.direnv/
 
 .env
+.secrets
 
 *.log
 

@@ -11,9 +11,9 @@ This is a very simple bot which only has a few commands:
 - /minecraft stop
 - /minecraft extendtime
 
-For a description of each command, see [Commands](#Commands).
+For a description of each command, see [Commands](#commands).
 
-The bot interacts with a separate API service [mc-manager-api](https://github.com/tcpkump/mc-manager-api) that provides the exact same commands. For more info on the API, view that project's README. 
+The bot interacts with a separate API service [mc-manager-api](https://github.com/tcpkump/mc-manager-api) that provides the exact same commands. For more info on the API, view that project's README.
 Requests to the API are then executed on the actual instance that is hosting the Minecraft servers.
 
 I run it in a docker container, built from the supplied `Dockerfile`.
@@ -66,4 +66,3 @@ I would like to setup a simple CI/CD pipeline for this.
 ### Improve docker image
 
 This currently builds into a fairly large docker image, and I could probably benefit from picking a more lightweight base image.
-

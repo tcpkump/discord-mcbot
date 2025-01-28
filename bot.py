@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import logging
-import requests
-import discord
 import json
+import logging
 import os
 
+import discord
+import requests
 from dotenv import load_dotenv
 
 # Load configuration from environment variables/.env file
@@ -18,13 +18,17 @@ logging.basicConfig(level=logging.INFO)
 
 # prepare bot
 bot = discord.Bot()
+
+
 @bot.event
 async def on_ready():
     logging.info(f"Logged in as {bot.user} (ID: {bot.user.id})")
 
+
 # create commands/command group
 minecraft = discord.SlashCommandGroup("minecraft", "Manage Minecraft server(s).")
 server_desc = "Server to target."
+
 
 @minecraft.command()
 async def list(ctx):
@@ -48,8 +52,12 @@ async def list(ctx):
     logging.info(output)
     await ctx.respond(output)
 
+
 @minecraft.command()
-async def start(ctx, server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER)):
+async def start(
+    ctx,
+    server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER),
+):
     """
     Start the Minecraft server
     """
@@ -60,20 +68,24 @@ async def start(ctx, server: discord.Option(str, server_desc, required=False, de
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
-    if not any(i['name'] == server for i in server_list):
+    if not any(i["name"] == server for i in server_list):
         logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
 
-    post_body = {'server': server}
+    post_body = {"server": server}
     response = requests.post(API_SERVER + "/start", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
     logging.info(message)
     await ctx.respond(message)
 
+
 @minecraft.command()
-async def stop(ctx, server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER)):
+async def stop(
+    ctx,
+    server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER),
+):
     """
     Stop the Minecraft server
     """
@@ -84,22 +96,27 @@ async def stop(ctx, server: discord.Option(str, server_desc, required=False, def
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
-    if not any(i['name'] == server for i in server_list):
+    if not any(i["name"] == server for i in server_list):
         logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
 
-    post_body = {'server': server}
+    post_body = {"server": server}
     response = requests.post(API_SERVER + "/stop", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
     logging.info(message)
     await ctx.respond(message)
 
+
 @minecraft.command()
-async def extendtime(ctx,
-                     server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER),
-                     days: discord.Option(int, "How many days to keep the server running.", required=False, default=1)):
+async def extendtime(
+    ctx,
+    server: discord.Option(str, server_desc, required=False, default=DEFAULT_SERVER),
+    days: discord.Option(
+        int, "How many days to keep the server running.", required=False, default=1
+    ),
+):
     """
     Extend how long the Minecraft server stays running
     """
@@ -111,7 +128,7 @@ async def extendtime(ctx,
     json_data = json.loads(response.text)
     server_list = json_data["message"]
 
-    if not any(i['name'] == server for i in server_list):
+    if not any(i["name"] == server for i in server_list):
         logging.warn(f"Server ({server}) not in list of servers.")
         await ctx.respond(f"Server ({server}) not in list of servers.")
         return
@@ -121,14 +138,14 @@ async def extendtime(ctx,
         await ctx.respond(f"Days ({days}) outside of accepted range 1-30.")
         return
 
-    post_body = {'server': server, 'days': days}
+    post_body = {"server": server, "days": days}
     response = requests.post(API_SERVER + "/extendtime", json=post_body)
     json_data = json.loads(response.text)
     message = json_data["message"]
     logging.info(message)
     await ctx.respond(message)
 
+
 # main
 bot.add_application_command(minecraft)
 bot.run(DISCORD_TOKEN)
-
